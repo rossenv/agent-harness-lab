@@ -56,18 +56,7 @@ web-build/
 
 .pnpm-store/
 
-# AI stuff
-.beads
-GEMINI.md
-.gemini
-.claude
-.codex
-CLAUDE.md
 tasks/
-AGENTS.md
-docs/designs/
-docs/research/
-.agents
 
 # Tests
 coverage/
