@@ -1,0 +1,81 @@
+# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+
+# dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Native
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Metro
+.metro-health-check*
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
+.DS_Store
+*.pem
+
+# local env files
+.env*.local
+
+# typescript
+*.tsbuildinfo
+
+.idea
+.vscode
+
+.env
+/public/expo/
+
+*.graphql
+
+.app
+
+# .db
+# .drizzle
+# Expo
+.expo
+dist/
+web-build/
+.env.local
+
+.pnpm-store/
+
+# AI stuff
+.beads
+GEMINI.md
+.gemini
+.claude
+.codex
+CLAUDE.md
+tasks/
+AGENTS.md
+docs/designs/
+docs/research/
+.agents
+
+# Tests
+coverage/
+.worktrees/
+
+
+# Eval run output (server/)
+server/eval/results/
+
+# Vercel CLI link metadata
+.vercel
