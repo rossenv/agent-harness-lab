@@ -3,21 +3,31 @@ import { readFileSync } from "node:fs"
 
 type HookInput = {
   tool_name: string
-  tool_input: { file_path?: string }
+  tool_input: { file_path?: string; command?: string }
 }
 
-const PROTECTED: RegExp[] = [
+// Checked against tool_input.file_path (Read, Edit, Write).
+const PROTECTED_PATHS: RegExp[] = [
   /(^|\/)\.env(?!\.example$)(\.|$)/,
   /(^|\/)migrations\//,
 ]
 
-const input: HookInput = JSON.parse(readFileSync(0, "utf8"))
-const path = input.tool_input.file_path ?? ""
+// Checked against tool_input.command (Bash). Best-effort: see the lesson.
+const PROTECTED_IN_COMMANDS: RegExp[] = [
+  /(^|[^\w.-])\.env(?!\.example\b)(\.[\w-]+)*(?![\w.-])/,
+  /(^|[\s\/'"])migrations\//,
+]
 
-const hit = PROTECTED.find((re) => re.test(path))
+const input: HookInput = JSON.parse(readFileSync(0, "utf8"))
+const [target, rules] =
+  input.tool_name === "NotBash"
+    ? [input.tool_input.command ?? "", PROTECTED_IN_COMMANDS]
+    : [input.tool_input.file_path ?? "", PROTECTED_PATHS]
+
+const hit = rules.find((re) => re.test(target))
 if (hit) {
   console.error(
-    `Blocked: ${path} is protected (${hit}). Ask the human instead.`,
+    `Blocked: ${target} touches a protected file (${hit}). Ask the human instead.`,
   )
   process.exit(2)
 }
