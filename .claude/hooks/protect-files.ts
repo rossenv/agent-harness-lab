@@ -20,7 +20,7 @@ const PROTECTED_IN_COMMANDS: RegExp[] = [
 
 const input: HookInput = JSON.parse(readFileSync(0, "utf8"))
 const [target, rules] =
-  input.tool_name === "NotBash"
+  input.tool_name === "Bash"
     ? [input.tool_input.command ?? "", PROTECTED_IN_COMMANDS]
     : [input.tool_input.file_path ?? "", PROTECTED_PATHS]
 
