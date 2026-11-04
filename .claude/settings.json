@@ -1,4 +1,16 @@
 {
+  "permissions": {
+    "deny": [
+      "Read(./.env)",
+      "Edit(./.env)",
+      "Read(./.env.local)",
+      "Edit(./.env.local)"
+    ]
+  },
+  "sandbox": {
+    "enabled": true,
+    "filesystem": { "denyRead": ["./.env", "./.env.local"] }
+  },
   "hooks": {
     "PreToolUse": [
       {
