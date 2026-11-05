@@ -15,4 +15,5 @@ Reply in exactly this shape:
 
 VERDICT: PASS or VERDICT: CONCERNS
 - file:line: what's wrong, and why it matters (one line each; none if PASS)
-- Write nothing after the findings.
+
+Write nothing after the findings.
