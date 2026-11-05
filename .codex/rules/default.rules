@@ -1,0 +1,8 @@
+# New dependencies need a human's OK.
+prefix_rule(
+    pattern = ["pnpm", "add"],
+    decision = "prompt",
+    justification = "Adding a dependency needs a human's approval.",
+    match = [["pnpm", "add", "zod"], ["pnpm", "add", "-D", "vitest"]],
+    not_match = [["pnpm", "install"], ["pnpm", "test"]],
+)

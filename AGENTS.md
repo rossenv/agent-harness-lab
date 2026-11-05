@@ -6,4 +6,7 @@
 
 ## Conventions
 - Validate external input with Zod.
+- "External input" means data that crosses a boundary (HTTP, files, env, CLI args).
+  Plain function arguments aren't external input.
+- Ask before adding a dependency.
 - No default exports.
