@@ -10,4 +10,5 @@
 - "External input" means data that crosses a boundary (HTTP, files, env, CLI args).
   Plain function arguments aren't external input.
 - Ask before adding a dependency.
-- No default exports.
+- No default exports, except in tool config files (vitest.config.ts).
+- Every module in src/ is re-exported from src/index.ts, in alphabetical order.

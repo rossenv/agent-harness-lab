@@ -68,3 +68,6 @@ server/eval/results/
 
 # Vercel CLI link metadata
 .vercel
+
+# Agent worktrees
+.claude/worktrees/

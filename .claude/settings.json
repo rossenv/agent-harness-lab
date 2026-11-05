@@ -34,5 +34,6 @@
         ]
       }
     ]
-  }
+  },
+  "worktree": { "baseRef": "head" }
 }
