@@ -12,6 +12,17 @@
           }
         ]
       }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$(git rev-parse --show-toplevel)/.claude/hooks/stop-gate.ts\"",
+            "timeout": 30
+          }
+        ]
+      }
     ]
   }
 }
