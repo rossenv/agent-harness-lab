@@ -2,6 +2,7 @@
 export { chunkSum } from "./composed/chunk-sum.ts"
 export { chunk } from "./chunk.ts"
 export { clamp } from "./clamp.ts"
+export { range } from "./range.ts"
 export { slugTitle } from "./composed/slug-title.ts"
 export { slugify } from "./slugify.ts"
 export { sum } from "./sum.ts"
