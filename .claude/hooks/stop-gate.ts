@@ -13,7 +13,7 @@ const run = (cmd: string, args: string[]) =>
 // Nothing changed since the last commit: nothing to verify.
 if (run("git", ["status", "--porcelain"]).stdout.trim() === "") process.exit(0)
 
-for (const script of ["typecheck", "test:changed"]) {
+for (const script of ["typecheck", "test:arch", "test:changed"]) {
   const r = run("pnpm", ["-s", script])
   if (r.status === 0) continue
 

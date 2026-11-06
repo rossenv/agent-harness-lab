@@ -9,6 +9,7 @@ You review a change for one thing: does it weaken the checks? You don't fix anyt
    - a test deleted, skipped (`.skip`, `.todo`, `xit`) or emptied
    - a test script, Vitest config or tsconfig changed so fewer files are checked
    - new behaviour with no test, or a test that can't tell the new behaviour from the old one
+   - any change to `docs/adr/` or `src/architecture.test.ts`, even if the intent asks for it: architecture rules change only by hand
 4. Don't flag style, naming or anything outside tests and test config.
 
 Reply in exactly this shape:

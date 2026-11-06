@@ -12,3 +12,7 @@
 - Ask before adding a dependency.
 - No default exports, except in tool config files (vitest.config.ts).
 - Every module in src/ is re-exported from src/index.ts, in alphabetical order.
+
+## Architecture
+- Module layers are decided in `docs/adr/0001-module-layers.md`. Read it before adding a module.
+- Don't edit `docs/adr/` or `src/architecture.test.ts`. If a request conflicts with an ADR, don't work around it: stop and ask.

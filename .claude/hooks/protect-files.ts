@@ -24,6 +24,21 @@ const [target, rules] =
     ? [input.tool_input.command ?? "", PROTECTED_IN_COMMANDS]
     : [input.tool_input.file_path ?? "", PROTECTED_PATHS]
 
+// Agents may read these but not change them. Checked for Edit and Write only.
+const READ_ONLY_PATHS: RegExp[] = [
+  /(^|\/)docs\/adr\//,
+  /(^|\/)src\/architecture\.test\.ts$/,
+]
+
+const isWrite = input.tool_name === "Edit" || input.tool_name === "Write"
+const ruleFile = isWrite && READ_ONLY_PATHS.some((re) => re.test(target))
+if (ruleFile) {
+  console.error(
+    `Blocked: ${target} is an architecture rule. Agents read it; humans change it. Ask the human instead.`,
+  )
+  process.exit(2)
+}
+
 const hit = rules.find((re) => re.test(target))
 if (hit) {
   console.error(
