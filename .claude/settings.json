@@ -10,7 +10,8 @@
   },
   "sandbox": {
     "enabled": true,
-    "filesystem": { "denyRead": ["./.env", "./.env.local"] }
+    "filesystem": { "denyRead": ["./.env", "./.env.local"] },
+    "allowUnsandboxedCommands": false
   },
   "hooks": {
     "PreToolUse": [
