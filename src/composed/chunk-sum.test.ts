@@ -28,9 +28,12 @@ describe("chunkSum", () => {
   it.each([0, -1, 0.5, Number.NaN, Infinity, -Infinity])(
     "lets chunk's RangeError through for invalid size %s",
     (size) => {
-      const error = new RangeError("chunk: size must be a positive integer")
-      expect(() => chunkSum([1, 2], size)).toThrow(error)
-      expect(() => chunkSum([], size)).toThrow(error)
+      for (const items of [[1, 2], []]) {
+        expect(() => chunkSum(items, size)).toThrow(RangeError)
+        expect(() => chunkSum(items, size)).toThrow(
+          "chunk: size must be a positive integer",
+        )
+      }
     },
   )
 })
