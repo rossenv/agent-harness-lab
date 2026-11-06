@@ -1,4 +1,5 @@
 // Public API: every module in src/ is re-exported here.
+export { chunkSum } from "./composed/chunk-sum.ts"
 export { chunk } from "./chunk.ts"
 export { clamp } from "./clamp.ts"
 export { slugTitle } from "./composed/slug-title.ts"
