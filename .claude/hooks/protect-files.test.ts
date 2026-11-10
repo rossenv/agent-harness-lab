@@ -49,16 +49,18 @@ describe("protect-files hook: Bash", () => {
 })
 
 describe("protect-files hook: architecture rules", () => {
-  it.each(["src/architecture.test.ts", "docs/adr/0001-module-layers.md"])(
-    "blocks changing %s",
-    (p) => {
-      for (const tool of ["Edit", "Write"]) {
-        const r = runPath(tool, `/repo/${p}`)
-        expect(r.status).toBe(2)
-        expect(r.stderr).toContain("architecture rule")
-      }
-    },
-  )
+  it.each([
+    "src/architecture.test.ts",
+    "docs/adr/0001-module-layers.md",
+    ".github/workflows/ci.yml",
+    ".github/CODEOWNERS",
+  ])("blocks changing %s", (p) => {
+    for (const tool of ["Edit", "Write"]) {
+      const r = runPath(tool, `/repo/${p}`)
+      expect(r.status).toBe(2)
+      expect(r.stderr).toContain("rule file")
+    }
+  })
 
   it("allows reading the ADR", () => {
     expect(runPath("Read", "/repo/docs/adr/0001-module-layers.md").status).toBe(

@@ -1,0 +1,9 @@
+# Rule files: a human owner reviews every change to these.
+/.github/                 @rossenv
+/docs/adr/                @rossenv
+/src/architecture.test.ts @rossenv
+/AGENTS.md                @rossenv
+/CLAUDE.md                @rossenv
+/.claude/                 @rossenv
+/.codex/                  @rossenv
+/.agents/                 @rossenv

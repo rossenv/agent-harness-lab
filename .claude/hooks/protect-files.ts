@@ -28,13 +28,14 @@ const [target, rules] =
 const READ_ONLY_PATHS: RegExp[] = [
   /(^|\/)docs\/adr\//,
   /(^|\/)src\/architecture\.test\.ts$/,
+  /(^|\/)\.github\//,
 ]
 
 const isWrite = input.tool_name === "Edit" || input.tool_name === "Write"
 const ruleFile = isWrite && READ_ONLY_PATHS.some((re) => re.test(target))
 if (ruleFile) {
   console.error(
-    `Blocked: ${target} is an architecture rule. Agents read it; humans change it. Ask the human instead.`,
+    `Blocked: ${target} is a rule file (an ADR, the architecture test or CI). Agents read it; humans change it. Ask the human instead.`,
   )
   process.exit(2)
 }
