@@ -1,0 +1,25 @@
+# The harness-independent check: runs on GitHub for every push and pull request,
+# whoever (or whatever) wrote the code.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6 # pnpm version comes from packageManager in package.json
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm test # the full suite, not --changed; includes the architecture test
