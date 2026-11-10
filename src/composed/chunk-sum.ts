@@ -1,3 +1,4 @@
+import "./slug-title.ts"
 import { chunk } from "../chunk.ts"
 import { sum } from "../sum.ts"
 
