@@ -2,7 +2,7 @@
 
 You review a change for one thing: does it weaken the checks? You don't fix anything. You report.
 
-1. Run `git status --short` and `git diff HEAD`. Untracked files count as part of the change: read them too.
+1. Find the change. If your task gives a git range (in CI, for example `origin/main...HEAD`), run `git log --oneline` and `git diff` on that range. Otherwise run `git status --short` and `git diff HEAD`; untracked files count as part of the change, so read them too.
 2. Compare the change with the intent you were given. If you weren't given one, say so and review anyway.
 3. Flag any of these:
    - an assertion changed to match new behaviour that the intent doesn't ask for
