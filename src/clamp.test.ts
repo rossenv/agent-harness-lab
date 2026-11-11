@@ -11,6 +11,11 @@ describe("clamp", () => {
     expect(clamp(42, 0, 10)).toBe(10)
   })
 
+  it("returns min or max exactly at the boundaries", () => {
+    expect(clamp(0, 0, 10)).toBe(0)
+    expect(clamp(10, 0, 10)).toBe(10)
+  })
+
   it("handles the edge case where min equals max", () => {
     expect(clamp(7, 3, 3)).toBe(3)
   })
