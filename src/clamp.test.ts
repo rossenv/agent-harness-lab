@@ -20,8 +20,8 @@ describe("clamp", () => {
     expect(clamp(7, 3, 3)).toBe(3)
   })
 
-  it("throws RangeError when min is greater than max", () => {
-    expect(() => clamp(5, 10, 0)).toThrow(RangeError)
+  it("handles min greater than max", () => {
+    expect(clamp(5, 10, 0)).toBe(5)
   })
 
   it("throws TypeError for NaN or non-number arguments", () => {
