@@ -54,6 +54,9 @@ describe("protect-files hook: architecture rules", () => {
     "docs/adr/0001-module-layers.md",
     ".github/workflows/ci.yml",
     ".github/CODEOWNERS",
+    ".mcp.json",
+    ".codex/config.toml",
+    "mcp/tracker/server.ts",
   ])("blocks changing %s", (p) => {
     for (const tool of ["Edit", "Write"]) {
       const r = runPath(tool, `/repo/${p}`)

@@ -7,3 +7,5 @@
 /.claude/                 @rossenv
 /.codex/                  @rossenv
 /.agents/                 @rossenv
+/.mcp.json                @rossenv
+/mcp/                     @rossenv

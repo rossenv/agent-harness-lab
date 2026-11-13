@@ -6,7 +6,12 @@
       "Read(./.env.local)",
       "Edit(./.env.local)"
     ],
-    "ask": ["Bash(pnpm add *)", "Bash(npm install *)"]
+    "ask": [
+      "Bash(pnpm add *)",
+      "Bash(npm install *)",
+      "mcp__tracker__add_comment"
+    ],
+    "allow": ["mcp__tracker__list_issues", "mcp__tracker__get_issue"]
   },
   "sandbox": {
     "enabled": true,

@@ -1,0 +1,7 @@
+# Project-scoped Codex config. Codex loads it only if you trust this project.
+[mcp_servers.tracker]
+command = "node"
+args = ["mcp/tracker/server.ts"]
+env_vars = ["TRACKER_FILE"]
+# Ask before any tool that isn't marked read-only (add_comment).
+default_tools_approval_mode = "writes"

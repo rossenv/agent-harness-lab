@@ -44,5 +44,5 @@
     "noEmit": true,
     "allowImportingTsExtensions": true
   },
-  "include": ["src", ".claude/hooks"]
+  "include": ["src", ".claude/hooks", "mcp"]
 }

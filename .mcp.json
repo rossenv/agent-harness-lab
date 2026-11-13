@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "tracker": {
+      "command": "node",
+      "args": ["mcp/tracker/server.ts"],
+      "env": { "TRACKER_FILE": "${TRACKER_FILE:-}" }
+    }
+  }
+}
