@@ -5,3 +5,11 @@ args = ["mcp/tracker/server.ts"]
 env_vars = ["TRACKER_FILE"]
 # Ask before any tool that isn't marked read-only (add_comment).
 default_tools_approval_mode = "writes"
+
+[mcp_servers.github]
+url = "https://api.githubcopilot.com/mcp/x/issues"
+bearer_token_env_var = "GITHUB_MCP_PAT"
+http_headers = { "X-MCP-Lockdown" = "true" }
+# Only these tools exist for Codex; the write tool asks first.
+enabled_tools = ["issue_read", "list_issues", "search_issues", "add_issue_comment"]
+default_tools_approval_mode = "writes"

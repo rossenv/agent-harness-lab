@@ -9,9 +9,20 @@
     "ask": [
       "Bash(pnpm add *)",
       "Bash(npm install *)",
-      "mcp__tracker__add_comment"
+      "mcp__tracker__add_comment",
+      "mcp__tracker__close_issue",
+      "mcp__github__add_issue_comment",
+      "mcp__github__update_issue_comment",
+      "mcp__github__issue_write",
+      "mcp__github__sub_issue_write"
     ],
-    "allow": ["mcp__tracker__list_issues", "mcp__tracker__get_issue"]
+    "allow": [
+      "mcp__tracker__list_issues",
+      "mcp__tracker__get_issue",
+      "mcp__github__issue_read",
+      "mcp__github__list_issues",
+      "mcp__github__search_issues"
+    ]
   },
   "sandbox": {
     "enabled": true,

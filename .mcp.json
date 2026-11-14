@@ -4,6 +4,14 @@
       "command": "node",
       "args": ["mcp/tracker/server.ts"],
       "env": { "TRACKER_FILE": "${TRACKER_FILE:-}" }
+    },
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/x/issues",
+      "headers": {
+        "Authorization": "Bearer ${GITHUB_MCP_PAT}",
+        "X-MCP-Lockdown": "true"
+      }
     }
   }
 }

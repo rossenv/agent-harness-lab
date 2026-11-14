@@ -90,5 +90,23 @@ server.registerTool(
   },
 )
 
+server.registerTool(
+  "close_issue",
+  {
+    description: "Mark an issue as done. Visible to the whole team.",
+    inputSchema: z.object({ id: IssueId }),
+    annotations: { readOnlyHint: false, destructiveHint: false },
+  },
+  async ({ id }) => {
+    const issues = load()
+    const issue = issues.find((i) => i.id === id)
+    if (!issue) return reply(`No issue ${id}.`, true)
+    if (issue.status === "done") return reply(`${id} is already done.`)
+    issue.status = "done"
+    save(issues)
+    return reply(`${id} closed.`)
+  },
+)
+
 await server.connect(new StdioServerTransport())
 console.error(`tracker: serving ${file}`)
