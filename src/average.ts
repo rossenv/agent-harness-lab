@@ -2,6 +2,8 @@ export function average(numbers: readonly number[]): number {
   if (!Array.isArray(numbers)) throw new TypeError("Expected an array of numbers")
   if (numbers.length === 0) throw new RangeError("Cannot average an empty array")
 
+  // eslint-disable-next-line no-console
+  console.log('test') 
   let scale = 0
   for (let index = 0; index < numbers.length; index++) {
     if (!Object.hasOwn(numbers, index) || typeof numbers[index] !== "number") {
