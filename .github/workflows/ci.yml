@@ -22,4 +22,7 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm typecheck
+      - run: pnpm lint
+      - name: No lint disable comments # lint can't catch these itself
+        run: "! git grep -nE '(oxlint|eslint)-(disable|enable)' -- src mcp"
       - run: pnpm test # the full suite, not --changed; includes the architecture test

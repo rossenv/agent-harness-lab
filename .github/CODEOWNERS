@@ -9,3 +9,4 @@
 /.agents/                 @rossenv
 /.mcp.json                @rossenv
 /mcp/                     @rossenv
+/.oxlintrc.json           @rossenv

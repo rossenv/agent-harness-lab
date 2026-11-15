@@ -15,7 +15,7 @@ const PROTECTED_PATHS: RegExp[] = [
 // Checked against tool_input.command (Bash). Best-effort: see the lesson.
 const PROTECTED_IN_COMMANDS: RegExp[] = [
   /(^|[^\w.-])\.env(?!\.example\b)(\.[\w-]+)*(?![\w.-])/,
-  /(^|[\s\/'"])migrations\//,
+  /(^|[\s/'"])migrations\//,
 ]
 
 const input: HookInput = JSON.parse(readFileSync(0, "utf8"))
@@ -32,13 +32,14 @@ const READ_ONLY_PATHS: RegExp[] = [
   /(^|\/)\.mcp\.json$/,
   /(^|\/)\.codex\/config\.toml$/,
   /(^|\/)mcp\//,
+  /(^|\/)\.oxlintrc\.json$/,
 ]
 
 const isWrite = input.tool_name === "Edit" || input.tool_name === "Write"
 const ruleFile = isWrite && READ_ONLY_PATHS.some((re) => re.test(target))
 if (ruleFile) {
   console.error(
-    `Blocked: ${target} is a rule file (an ADR, the architecture test, CI or MCP config). Agents read it; humans change it. Ask the human instead.`,
+    `Blocked: ${target} is a rule file (an ADR, the architecture test, CI, MCP or lint config). Agents read it; humans change it. Ask the human instead.`,
   )
   process.exit(2)
 }

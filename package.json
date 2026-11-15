@@ -7,7 +7,8 @@
     "test": "vitest run",
     "test:changed": "vitest run --changed --passWithNoTests",
     "test:arch": "vitest run src/architecture.test.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "lint": "oxlint --deny-warnings"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +24,7 @@
   "type": "module",
   "devDependencies": {
     "@types/node": "^26.6.6",
+    "oxlint": "^1.93.0",
     "typescript": "^7.0.2",
     "vitest": "^5.0.5"
   },

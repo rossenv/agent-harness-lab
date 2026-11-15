@@ -57,6 +57,7 @@ describe("protect-files hook: architecture rules", () => {
     ".mcp.json",
     ".codex/config.toml",
     "mcp/tracker/server.ts",
+    ".oxlintrc.json",
   ])("blocks changing %s", (p) => {
     for (const tool of ["Edit", "Write"]) {
       const r = runPath(tool, `/repo/${p}`)
