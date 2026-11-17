@@ -58,6 +58,15 @@ describe("protect-files hook: architecture rules", () => {
     ".codex/config.toml",
     "mcp/tracker/server.ts",
     ".oxlintrc.json",
+    "AGENTS.md",
+    "CLAUDE.md",
+    ".claude/settings.json",
+    ".agents/hooks/stop-gate.ts",
+    ".codex/hooks.json",
+    ".agents/review/test-review.md",
+    "package.json",
+    "vitest.config.ts",
+    "tsconfig.json",
   ])("blocks changing %s", (p) => {
     for (const tool of ["Edit", "Write"]) {
       const r = runPath(tool, `/repo/${p}`)
@@ -70,5 +79,38 @@ describe("protect-files hook: architecture rules", () => {
     expect(runPath("Read", "/repo/docs/adr/0001-module-layers.md").status).toBe(
       0,
     )
+  })
+})
+
+describe("protect-files hook: Codex apply_patch", () => {
+  const patch = (...files: string[]) =>
+    run("apply_patch", {
+      command: [
+        "*** Begin Patch",
+        ...files.map((f) => `*** Update File: ${f}`),
+        "*** End Patch",
+      ].join("\n"),
+    })
+
+  it("blocks a patch that touches a rule file", () => {
+    const r = patch("src/clamp.ts", ".github/workflows/ci.yml")
+    expect(r.status).toBe(2)
+    expect(r.stderr).toContain("rule file")
+  })
+
+  it("blocks a patch that touches a secret", () => {
+    expect(patch(".env.local").status).toBe(2)
+  })
+
+  it("allows a patch to ordinary code", () => {
+    expect(patch("src/clamp.ts", "src/clamp.test.ts").status).toBe(0)
+  })
+})
+
+describe("protect-files hook: Claude worktrees", () => {
+  it("allows editing code inside a worktree", () => {
+    expect(
+      runPath("Edit", "/repo/.claude/worktrees/agent-1/src/clamp.ts").status,
+    ).toBe(0)
   })
 })

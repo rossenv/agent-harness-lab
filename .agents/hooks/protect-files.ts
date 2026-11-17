@@ -1,4 +1,5 @@
-// PreToolUse hook: block agent access to secrets and applied migrations.
+// PreToolUse hook (Claude Code and Codex): block agent access to secrets and applied
+// migrations, and block agent edits to rule files.
 import { readFileSync } from "node:fs"
 
 type HookInput = {
@@ -6,7 +7,7 @@ type HookInput = {
   tool_input: { file_path?: string; command?: string }
 }
 
-// Checked against tool_input.file_path (Read, Edit, Write).
+// Checked against file paths (Read, Edit, Write, apply_patch).
 const PROTECTED_PATHS: RegExp[] = [
   /(^|\/)\.env(?!\.example$)(\.|$)/,
   /(^|\/)migrations\//,
@@ -18,37 +19,60 @@ const PROTECTED_IN_COMMANDS: RegExp[] = [
   /(^|[\s/'"])migrations\//,
 ]
 
-const input: HookInput = JSON.parse(readFileSync(0, "utf8"))
-const [target, rules] =
-  input.tool_name === "Bash"
-    ? [input.tool_input.command ?? "", PROTECTED_IN_COMMANDS]
-    : [input.tool_input.file_path ?? "", PROTECTED_PATHS]
-
-// Agents may read these but not change them. Checked for Edit and Write only.
+// Agents may read these but not change them. Checked for Edit, Write and apply_patch.
 const READ_ONLY_PATHS: RegExp[] = [
+  // Architecture, CI, MCP and lint config
   /(^|\/)docs\/adr\//,
   /(^|\/)src\/architecture\.test\.ts$/,
   /(^|\/)\.github\//,
   /(^|\/)\.mcp\.json$/,
-  /(^|\/)\.codex\/config\.toml$/,
   /(^|\/)mcp\//,
   /(^|\/)\.oxlintrc\.json$/,
+  // The harness itself: instructions, hooks, agent and tool config.
+  // .claude/worktrees/ is excluded: Claude's worktree agents write code there.
+  /(^|\/)AGENTS\.md$/,
+  /(^|\/)CLAUDE\.md$/,
+  /(^|\/)\.claude\/(?!worktrees\/)/,
+  /(^|\/)\.codex\//,
+  /(^|\/)\.agents\//,
+  // What CI runs: the scripts, and the config they read.
+  /(^|\/)package\.json$/,
+  /(^|\/)vitest\.config\.ts$/,
+  /(^|\/)tsconfig\.json$/,
 ]
 
-const isWrite = input.tool_name === "Edit" || input.tool_name === "Write"
-const ruleFile = isWrite && READ_ONLY_PATHS.some((re) => re.test(target))
-if (ruleFile) {
-  console.error(
-    `Blocked: ${target} is a rule file (an ADR, the architecture test, CI, MCP or lint config). Agents read it; humans change it. Ask the human instead.`,
-  )
-  process.exit(2)
-}
+const input: HookInput = JSON.parse(readFileSync(0, "utf8"))
+const { tool_name, tool_input } = input
 
-const hit = rules.find((re) => re.test(target))
-if (hit) {
-  console.error(
-    `Blocked: ${target} touches a protected file (${hit}). Ask the human instead.`,
+// Codex's apply_patch sends the whole patch in command, with one header line per file.
+const patchPaths = (patch: string) =>
+  [
+    ...patch.matchAll(/^\*\*\* (?:(?:Add|Update|Delete) File|Move to): (.+)$/gm),
+  ].map((m) => (m[1] as string).trim())
+
+const isBash = tool_name === "Bash"
+const isWrite = ["Edit", "Write", "apply_patch"].includes(tool_name)
+const targets = isBash
+  ? [tool_input.command ?? ""]
+  : tool_name === "apply_patch"
+    ? patchPaths(tool_input.command ?? "")
+    : [tool_input.file_path ?? ""]
+
+for (const target of targets) {
+  if (isWrite && READ_ONLY_PATHS.some((re) => re.test(target))) {
+    console.error(
+      `Blocked: ${target} is a rule file (instructions, hooks, CI, checks or their config). Agents read it; humans change it. Ask the human instead.`,
+    )
+    process.exit(2)
+  }
+  const hit = (isBash ? PROTECTED_IN_COMMANDS : PROTECTED_PATHS).find((re) =>
+    re.test(target),
   )
-  process.exit(2)
+  if (hit) {
+    console.error(
+      `Blocked: ${target} touches a protected file (${hit}). Ask the human instead.`,
+    )
+    process.exit(2)
+  }
 }
 process.exit(0)
