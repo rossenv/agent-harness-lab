@@ -102,6 +102,34 @@ describe("protect-files hook: Codex apply_patch", () => {
     expect(patch(".env.local").status).toBe(2)
   })
 
+  // Every header the parser reads: Add, Update, Delete, and Move to.
+  const rawPatch = (...lines: string[]) =>
+    run("apply_patch", {
+      command: ["*** Begin Patch", ...lines, "*** End Patch"].join("\n"),
+    })
+
+  it.each([
+    ["adds", ["*** Add File: .codex/hooks.json"]],
+    ["deletes", ["*** Delete File: AGENTS.md"]],
+    ["moves a file into", ["*** Update File: src/clamp.ts", "*** Move to: .github/clamp.ts"]],
+  ])("blocks a patch that %s a rule file", (_, lines) => {
+    const r = rawPatch(...lines)
+    expect(r.status).toBe(2)
+    expect(r.stderr).toContain("rule file")
+  })
+
+  // The harness paths, reached through apply_patch rather than Edit/Write.
+  it.each([
+    "AGENTS.md",
+    ".codex/hooks.json",
+    ".agents/hooks/stop-gate.ts",
+    "package.json",
+    "/repo/AGENTS.md",
+  ])("blocks a patch to %s", (p) => {
+    expect(patch(p).status).toBe(2)
+  })
+
+  
   it("allows a patch to ordinary code", () => {
     expect(patch("src/clamp.ts", "src/clamp.test.ts").status).toBe(0)
   })
