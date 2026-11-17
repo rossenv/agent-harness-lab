@@ -7,7 +7,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"$(git rev-parse --show-toplevel)/.claude/hooks/protect-files.ts\"",
+            "command": "node \"$(git rev-parse --show-toplevel)/.agents/hooks/protect-files.ts\"",
             "statusMessage": "Checking Bash command"
           }
         ]
@@ -19,7 +19,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"$(git rev-parse --show-toplevel)/.claude/hooks/lint-edit.ts\"",
+            "command": "node \"$(git rev-parse --show-toplevel)/.agents/hooks/lint-edit.ts\"",
             "statusMessage": "Linting edited files"
           }
         ]
@@ -30,7 +30,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"$(git rev-parse --show-toplevel)/.claude/hooks/stop-gate.ts\"",
+            "command": "node \"$(git rev-parse --show-toplevel)/.agents/hooks/stop-gate.ts\"",
             "timeout": 30
           }
         ]
