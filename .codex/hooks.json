@@ -11,6 +11,16 @@
             "statusMessage": "Checking Bash command"
           }
         ]
+      },
+      {
+        "matcher": "^apply_patch$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$(git rev-parse --show-toplevel)/.agents/hooks/protect-files.ts\"",
+            "statusMessage": "Checking protected files"
+          }
+        ]
       }
     ],
     "PostToolUse": [

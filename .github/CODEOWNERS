@@ -10,3 +10,7 @@
 /.mcp.json                @rossenv
 /mcp/                     @rossenv
 /.oxlintrc.json           @rossenv
+/package.json             @rossenv
+/vitest.config.ts         @rossenv
+/tsconfig.json            @rossenv
+/.vscode/                 @rossenv
