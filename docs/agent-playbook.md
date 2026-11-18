@@ -6,7 +6,7 @@ Last checked: 2026-11-17 · Claude Code 2.1.327 · Codex 0.170.0 · Node 24.18.0
 This repo is set up so that Claude Code and Codex can be handed real work, and humans keep control of architecture and quality.
 
 What it guarantees:
-- Nothing reaches `main` without a pull request and a green `check` job.
+- Nothing reaches `main` without a pull request and a green `check` job (Defined in GitHub rulesets).
 - Agents can't change the rules they work under through their file tools.
 - Every agent edit is linted while the agent is still working, with the same rules CI uses.
 
@@ -125,6 +125,7 @@ Run these after updating Claude Code, Codex or Node. Then update "Last checked".
 | The architecture test misses computed imports | Review |
 | Each person's global agent config (skills, plugins) changes behaviour | Nothing: the repo only controls its own guards |
 | Moving a folder can drop it from typecheck or a hook path | After an upgrade, check 6, and reading the diff |
+| If the playbook and a config file disagree, the config file wins. | It's a convention, not enforced. |
 
 ## Rollout
 - **Tier 0, day one:** AGENTS.md, CI, the ruleset, CODEOWNERS. It needs nothing installed.
