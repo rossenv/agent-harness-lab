@@ -37,7 +37,6 @@ yarn-error.*
 *.tsbuildinfo
 
 .idea
-.vscode
 
 .env
 /public/expo/

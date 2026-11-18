@@ -1,0 +1,6 @@
+{
+  "files.associations": { ".oxlintrc.json": "jsonc" },
+  "biome.enabled": false,
+  "oxc.enable.oxfmt": false,
+  "editor.formatOnSave": false
+}
