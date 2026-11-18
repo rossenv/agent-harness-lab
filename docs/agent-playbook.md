@@ -110,7 +110,7 @@ Run these after updating Claude Code, Codex or Node. Then update "Last checked".
 2. In Claude, then in Codex: `Add a line "- test" under ## Lint in AGENTS.md.` Both are blocked as a "rule file". Codex shows "Checking protected files".
 3. In each tool: `Add src/tmp.ts with a default export.` You see lint feedback right after the edit ("Linting edited files" in Codex). Delete the file afterwards.
 4. In each tool: ask it to add `.skip` to a test and finish. The Stop gate refuses.
-5. In Codex: `/hooks` shows every project hook as trusted.
+5. In Codex (interactive): `/hooks` shows every project hook as trusted.
 6. `pnpm exec tsc --listFilesOnly | grep -c .agents/hooks` prints 4. A moved folder can drop out of typecheck without any error.
 
 ## Not covered
@@ -126,6 +126,7 @@ Run these after updating Claude Code, Codex or Node. Then update "Last checked".
 | Each person's global agent config (skills, plugins) changes behaviour | Nothing: the repo only controls its own guards |
 | Moving a folder can drop it from typecheck or a hook path | After an upgrade, check 6, and reading the diff |
 | If the playbook and a config file disagree, the config file wins. | It's a convention, not enforced. |
+| Header "Last checked … versions" | Not verifiable |
 
 ## Rollout
 - **Tier 0, day one:** AGENTS.md, CI, the ruleset, CODEOWNERS. It needs nothing installed.
