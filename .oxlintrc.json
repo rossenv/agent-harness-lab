@@ -33,6 +33,8 @@
   "overrides": [
     { "files": ["*.config.ts"], "rules": { "no-restricted-exports": "off" } },
     { "files": ["src/**"], "rules": { "no-console": "error" } },
+    // ADR 0002: src/cli/ is the only layer that does I/O, so it may write to the console.
+    { "files": ["src/cli/**"], "rules": { "no-console": "off" } },    
     { "files": ["src/average.test.ts"], "rules": { "no-sparse-arrays": "off" } }
   ]
 }

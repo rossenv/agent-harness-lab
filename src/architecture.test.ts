@@ -1,14 +1,20 @@
-// Checks the module layers from docs/adr/0001-module-layers.md.
-import { readdirSync, readFileSync } from "node:fs"
+// Checks the module layers from docs/adr/0001-module-layers.md and 0002-app-layer.md
+import { existsSync, readdirSync, readFileSync } from "node:fs"
+import { dirname } from "node:path"
 import { describe, expect, it } from "vitest"
 
 const ADR = "docs/adr/0001-module-layers.md"
+const APP_ADR = "docs/adr/0002-app-layer.md"
+const LAYERS = ["cli", "composed"]
 
 const isModule = (f: string) => f.endsWith(".ts") && !f.endsWith(".test.ts")
 const core = readdirSync("src").filter((f) => isModule(f) && f !== "index.ts")
 const composed = readdirSync("src/composed", { withFileTypes: true })
   .filter((e) => e.isFile() && isModule(e.name))
   .map((e) => `composed/${e.name}`)
+const cli = existsSync("src/cli")
+  ? readdirSync("src/cli").filter(isModule).map((f) => `cli/${f}`)
+  : []
 
 // Every module path in `import ... from "x"`, `export ... from "x"`, `import "x"` and `import("x")`.
 function importsOf(path: string): string[] {
@@ -39,6 +45,36 @@ describe(`architecture (${ADR})`, () => {
       ).toEqual([])
     },
   )
+
+  it("every .ts file in src/ sits directly in src/ or in a known layer folder", () => {
+    // Recursive, so nested folders (src/composed/x/, src/cli/x/) and hidden ones count too.
+    // Folders with no .ts files, like tool-made ones, don't matter.
+    const misplaced = readdirSync("src", { recursive: true, encoding: "utf8" })
+      .filter((p) => p.endsWith(".ts"))
+      .filter((p) => dirname(p) !== "." && !LAYERS.includes(dirname(p)))
+    expect(
+      misplaced,
+      `These files are outside the known layers: ${misplaced.join(", ")}. ` +
+        `A new layer or subfolder needs an ADR and a rule here first. See ${APP_ADR}.`,
+    ).toEqual([])
+  })
+
+  it("cli modules import only node: built-ins, zod, core and composed modules", () => {
+    const allowed = [
+      ...core.map((f) => `../${f}`),
+      ...composed.map((f) => `../${f}`),
+    ]
+    for (const file of cli) {
+      const bad = importsOf(file).filter(
+        (i) => !i.startsWith("node:") && i !== "zod" && !allowed.includes(i),
+      )
+      expect(
+        bad,
+        `src/${file} imports ${bad.join(", ")}. CLI modules may import node: built-ins, ` +
+          `zod, and core or composed modules. See ${APP_ADR}.`,
+      ).toEqual([])
+    }
+  })
 
   it("src/index.ts re-exports every module in alphabetical order", () => {
     const expected = [...core, ...composed]
