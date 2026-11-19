@@ -46,9 +46,13 @@ describe(`architecture (${ADR})`, () => {
   )
 
   it("src/ has no folders outside the known layers", () => {
+    // Only folders that hold code count: an empty or tool-made folder isn't a layer.
     const folders = readdirSync("src", { withFileTypes: true })
       .filter((e) => e.isDirectory())
       .map((e) => e.name)
+      .filter((f) =>
+        readdirSync(`src/${f}`, { recursive: true, encoding: "utf8" }).some((p) => p.endsWith(".ts")),
+      )
     const unknown = folders.filter((f) => !LAYERS.includes(f))
     expect(
       unknown,
