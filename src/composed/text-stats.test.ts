@@ -18,6 +18,14 @@ describe("textStats: what a word is", () => {
     expect(stats.words).toBe(3)
     expect(stats.topWords.map((t) => t.word)).not.toContain("")
   })
+
+  it("does not count a lone fraction as a word", () => {
+    expect(textStats("½ cup").words).toBe(1)
+  })
+
+  it("keeps the accent of a decomposed letter when stripping punctuation", () => {
+    expect(textStats("cafe\u0301,").topWords).toEqual([{ word: "cafe\u0301", count: 1 }])
+  })
 })
 
 describe("textStats: words", () => {

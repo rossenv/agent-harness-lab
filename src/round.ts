@@ -9,14 +9,14 @@ export function round(value: number, decimals: number): number {
     throw new RangeError("round: decimals must be an integer from 0 to 20")
   }
   const abs = Math.abs(value)
-  const text = String(abs)
-  let rounded: number
-  if (text.includes("e")) {
-    // Exponent notation: tiny values round via toFixed; huge ones are integers already.
-    rounded = abs < 1 ? Number(abs.toFixed(decimals)) : abs
-  } else {
-    // Shift the decimal point in the string domain to dodge binary float error.
-    rounded = Number(`${Math.round(Number(`${text}e${decimals}`))}e-${decimals}`)
-  }
+  const shifted = shift(abs, decimals)
+  // Shifting a huge value can overflow; such a value has no decimals left to round.
+  const rounded = Number.isFinite(shifted) ? shift(Math.round(shifted), -decimals) : abs
   return rounded === 0 ? 0 : value < 0 ? -rounded : rounded
+}
+
+// Moves the decimal point by `places` in the string domain, which avoids binary float error.
+function shift(value: number, places: number): number {
+  const [mantissa, exponent] = value.toExponential().split("e")
+  return Number(`${mantissa}e${Number(exponent) + places}`)
 }

@@ -28,6 +28,18 @@ describe("round", () => {
     expect(round(1e21, 2)).toBe(1e21)
   })
 
+  it("returns a number, never NaN, when the shifted value needs exponent notation", () => {
+    expect(round(10, 20)).toBe(10)
+    expect(round(123456, 18)).toBe(123456)
+    expect(round(1.5, 20)).toBe(1.5)
+    expect(round(-10, 20)).toBe(-10)
+  })
+
+  it("returns huge values unchanged instead of overflowing", () => {
+    expect(round(Number.MAX_VALUE, 2)).toBe(Number.MAX_VALUE)
+    expect(round(-Number.MAX_VALUE, 20)).toBe(-Number.MAX_VALUE)
+  })
+
   it("throws RangeError for non-finite values", () => {
     expect(() => round(Number.NaN, 2)).toThrow(RangeError)
     expect(() => round(Number.POSITIVE_INFINITY, 2)).toThrow(RangeError)

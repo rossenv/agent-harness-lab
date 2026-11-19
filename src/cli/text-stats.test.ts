@@ -84,6 +84,12 @@ describe("run: failures print one line on stderr, nothing on stdout, exit 1", ()
     expect(result.stderr).toContain("/missing.txt")
   })
 
+  it("when what was read is not text", () => {
+    const result = run(["/f.txt"], () => 42 as unknown as string)
+    expect(failure(result)).toEqual(oneLineFailure)
+    expect(result.stderr).toContain("/f.txt")
+  })
+
   it("keeps a multi-line read error to one line", () => {
     const result = run(["/f.txt"], () => {
       throw new Error("first line\nsecond line")
@@ -107,6 +113,42 @@ describe("the command itself", () => {
     expect(result.stdout).toBe(
       '{"words":3,"uniqueWords":2,"averageWordLength":5,"topWords":[{"word":"hello","count":2},{"word":"world","count":1}]}\n',
     )
+  })
+
+  it("reads the file as UTF-8", () => {
+    const file = join(dir, "utf8.txt")
+    writeFileSync(file, "Café naïve café\n", "utf8")
+    const result = exec(file)
+    expect(result.status).toBe(0)
+    expect(JSON.parse(result.stdout)).toEqual({
+      words: 3,
+      uniqueWords: 2,
+      averageWordLength: 4.33,
+      topWords: [
+        { word: "café", count: 2 },
+        { word: "naïve", count: 1 },
+      ],
+    })
+  })
+
+  it("prints zeros for an empty file and exits 0", () => {
+    const file = join(dir, "empty.txt")
+    writeFileSync(file, "")
+    const result = exec(file)
+    expect(result.status).toBe(0)
+    expect(result.stderr).toBe("")
+    expect(result.stdout).toBe(
+      '{"words":0,"uniqueWords":0,"averageWordLength":0,"topWords":[]}\n',
+    )
+  })
+
+  it("exits 1 with one stderr line and no stdout when given more than one argument", () => {
+    const file = join(dir, "two.txt")
+    writeFileSync(file, "a b")
+    const result = exec(file, file)
+    expect(result.status).toBe(1)
+    expect(result.stdout).toBe("")
+    expect(result.stderr.trimEnd().split("\n")).toHaveLength(1)
   })
 
   it("exits 1 with one stderr line and no stdout when given no argument", () => {

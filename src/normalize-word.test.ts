@@ -30,6 +30,16 @@ describe("normalizeWord", () => {
     expect(normalizeWord("(42)")).toBe("42")
   })
 
+  it("does not count a fraction or other non-decimal number as a digit", () => {
+    expect(normalizeWord("½")).toBe("")
+    expect(normalizeWord("(²)")).toBe("")
+  })
+
+  it("keeps the combining accent of a decomposed letter", () => {
+    expect(normalizeWord("cafe\u0301!")).toBe("cafe\u0301")
+    expect(normalizeWord("\u201Ccafe\u0301\u201D")).toBe("cafe\u0301")
+  })
+
   it("throws TypeError when token is not a string", () => {
     expect(() => normalizeWord(42 as unknown as string)).toThrow(TypeError)
     expect(() => normalizeWord(undefined as unknown as string)).toThrow(TypeError)

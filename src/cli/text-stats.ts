@@ -7,6 +7,9 @@ export type RunResult = { stdout: string; stderr: string; code: number }
 // The only valid command line: exactly one non-empty file path.
 const argsSchema = z.tuple([z.string().min(1)])
 
+// The file is external input too: only text goes on to `textStats`.
+const textSchema = z.string()
+
 const fail = (message: string): RunResult => ({
   stdout: "",
   stderr: `${message.replace(/\s*[\r\n]+\s*/g, " ").trim()}\n`,
@@ -19,15 +22,18 @@ export function run(argv: readonly string[], readFile: (path: string) => string)
   if (!args.success) return fail("usage: node src/cli/text-stats.ts <file>")
   const [path] = args.data
 
-  let text: string
+  let content: unknown
   try {
-    text = readFile(path)
+    content = readFile(path)
   } catch (error) {
     const reason = error instanceof Error ? error.message : String(error)
     return fail(`text-stats: cannot read ${path}: ${reason}`)
   }
 
-  return { stdout: `${JSON.stringify(textStats(text))}\n`, stderr: "", code: 0 }
+  const text = textSchema.safeParse(content)
+  if (!text.success) return fail(`text-stats: cannot read ${path}: not text`)
+
+  return { stdout: `${JSON.stringify(textStats(text.data))}\n`, stderr: "", code: 0 }
 }
 
 if (import.meta.main) {
