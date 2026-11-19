@@ -1,5 +1,6 @@
 // Checks the module layers from docs/adr/0001-module-layers.md and 0002-app-layer.md
 import { existsSync, readdirSync, readFileSync } from "node:fs"
+import { dirname } from "node:path"
 import { describe, expect, it } from "vitest"
 
 const ADR = "docs/adr/0001-module-layers.md"
@@ -45,19 +46,16 @@ describe(`architecture (${ADR})`, () => {
     },
   )
 
-  it("src/ has no folders outside the known layers", () => {
-    // Only folders that hold code count: an empty or tool-made folder isn't a layer.
-    const folders = readdirSync("src", { withFileTypes: true })
-      .filter((e) => e.isDirectory())
-      .map((e) => e.name)
-      .filter((f) =>
-        readdirSync(`src/${f}`, { recursive: true, encoding: "utf8" }).some((p) => p.endsWith(".ts")),
-      )
-    const unknown = folders.filter((f) => !LAYERS.includes(f))
+  it("every .ts file in src/ sits directly in src/ or in a known layer folder", () => {
+    // Recursive, so nested folders (src/composed/x/, src/cli/x/) and hidden ones count too.
+    // Folders with no .ts files, like tool-made ones, don't matter.
+    const misplaced = readdirSync("src", { recursive: true, encoding: "utf8" })
+      .filter((p) => p.endsWith(".ts"))
+      .filter((p) => dirname(p) !== "." && !LAYERS.includes(dirname(p)))
     expect(
-      unknown,
-      `src/ has folders no layer rule covers: ${unknown.join(", ")}. ` +
-        `A new layer needs an ADR and a rule here first. See ${APP_ADR}.`,
+      misplaced,
+      `These files are outside the known layers: ${misplaced.join(", ")}. ` +
+        `A new layer or subfolder needs an ADR and a rule here first. See ${APP_ADR}.`,
     ).toEqual([])
   })
 

@@ -15,7 +15,8 @@ test, the no-console rule and the disable-comment search don't look.
 - Nothing imports from `src/cli/`, and `src/index.ts` doesn't re-export it.
 - All I/O (arguments, files, stdout, stderr, exit codes) happens in `src/cli/`.
   Core and composed modules stay pure.
-- Any other folder in `src/` needs an ADR first.
+- Any other folder in `src/`, or a subfolder of a layer, needs an ADR first.
+- Test files are exempt, as in ADR 0001: a CLI test may import its entry point.
 
 ## Consequences
 - The logic is tested without starting a process. A CLI test covers only the I/O.
